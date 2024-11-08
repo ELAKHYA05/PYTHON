@@ -1,0 +1,39 @@
+import folium
+    while True:
+        lat = input("Enter latitude: ")
+        lon = input("Enter longitude: ")
+        info = input("Enter information about this location: ")
+        
+        try:
+            lat = float(lat)
+            lon = float(lon)
+            location_data.append({'lat': lat, 'lon': lon, 'info': info})
+        except ValueError:
+            print("Invalid input. Please enter numerical values for latitude and longitude.")
+            continue
+        
+        more_locations = input("Do you want to add another location? (yes/no): ").strip().lower()
+        if more_locations != 'yes':
+            break
+    return location_data
+
+# Collect location data from the user
+user_location_data = collect_location_data()
+
+if user_location_data:
+    # Initialize the map centered around the first location
+    mymap = folium.Map(location=[user_location_data[0]['lat'], user_location_data[0]['lon']], zoom_start=5)
+
+    # Add markers to the map
+    for location in user_location_data:
+        folium.Marker(
+            [location['lat'], location['lon']],
+            popup=location['info'],
+        ).add_to(mymap)
+
+    # Save the map to an HTML file
+    mymap.save('user_location_tracking_map.html')
+
+    print("Map has been saved to user_location_tracking_map.html")
+else:
+    print("No location data provided.")
